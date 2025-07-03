@@ -1,0 +1,96 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+Project Workflow & Budget Estimation Guide
+
+note :right now no db use frontend only
+
+Step 1: Client Information Collection
+
+Client Selection:
+Choose existing client from database, OR
+Add new client information
+after the selection only basic details will appear
+if i selected existing it auto populate in the text fields
+Basic Details:
+Company Name
+Client Name
+Client Email
+Phone Number
+Telephone Number
+Address
+Project Location
+
+Project Classification:
+Service Type
+Project Scale
+Urgency Level
+Expected Start Date
+Project Description
+
+Step 2: Budget Type Selection
+
+Choose one of the following budget types:
+Labour + Material + Tools (Full Service)
+Labour + Tools (Client Provides Materials)
+Labour Only (Client Provides Materials & Tools)
+if labour only means ,in step 3 only labour should show no need of other two
+similar condition for the Labour + Tools ,no need of material
+
+Step 3: Cost Breakdown by Sections
+
+For each project section/portion, calculate costs in the following format:
+Section Layout (Row-wise Display):
+Section Information:
+Section Name/Title
+Section Description
+Upload Section Images (multiple images supported)
+Cost Categories (displayed in rows):
+Materials Section:
+Item SelectionDescriptionQuantityUnit PriceSubtotalActionSelect from DB OR Add NewMaterial detailsEnter qtyPrice per unitAuto-calculatedRemove[+ Add Material] button to add multiple material rows
+
+Tools & Equipment Section:
+
+Item SelectionDescriptionQuantityUnit PriceSubtotalActionSelect from DB OR Add NewTool/Equipment detailsEnter qtyPrice per unitAuto-calculatedRemove[+ Add Tool] button to add multiple tool rows
+Labour Section:
+Item SelectionDescriptionQuantityUnit PriceSubtotalActionSelect from DB OR Add NewLabor type detailsEnter hoursRate per hourAuto-calculatedRemove[+ Add Labour] button to add multiple labour rows
+Section Features:
+
+Multiple Items: Add multiple materials, tools, and labour types per section
+Individual Add Buttons: Separate add buttons for each category
+Remove Option: Remove individual items from each category
+Category Subtotals: Automatic calculation for each category
+Section Total: Sum of all categories within the section
+Database Integration:
+
+Material Types: Load from database with option to add new materials
+Tool Types: Load from database with option to add new tools/equipment
+Labour Types: Load from database with option to add new labor categories
+Add New Items: New entries automatically saved to database for future use
+
+Section Features:
+Description Field: Detailed explanation of work scope for each section
+Image Upload: Add multiple reference images per section
+Cost Calculation: Automatic subtotal calculation per section
+
+Multiple Sections:
+Use Add Section button to create additional similar portions
+Each section calculated independently with its own images and description
+Total Project Cost = Sum of all sections
+
+Step 4: Budget Summary
+
+Final Output:
+Client information summary
+Selected budget type
+Detailed cost breakdown by section
+Total project cost
+Terms and conditions
+
+Budget List:
+saved budjet should show here
+i can edit budget, view ,budget ,delete it
+the budget is going for the multiple reversal we need to track it
+

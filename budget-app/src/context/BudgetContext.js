@@ -48,6 +48,7 @@ const ActionTypes = {
   ADD_BUDGET: 'ADD_BUDGET',
   UPDATE_BUDGET: 'UPDATE_BUDGET',
   DELETE_BUDGET: 'DELETE_BUDGET',
+  CREATE_REVISION: 'CREATE_REVISION',
   SET_CURRENT_BUDGET: 'SET_CURRENT_BUDGET',
   SET_CURRENT_QUOTATION: 'SET_CURRENT_QUOTATION',
   LOAD_DATA: 'LOAD_DATA',
@@ -85,9 +86,30 @@ function budgetReducer(state, action) {
         updatedAt: new Date().toISOString(),
         status: 'draft'
       };
+      
+      // If this budget has a new client, save the client to the clients array
+      let updatedClients = state.clients;
+      if (action.payload.newClient && action.payload.newClient.companyName) {
+        const newClient = {
+          id: Date.now().toString(),
+          name: action.payload.newClient.companyName,
+          contactPerson: action.payload.newClient.clientName,
+          email: action.payload.newClient.clientEmail,
+          phone: action.payload.newClient.phoneNumber,
+          address: action.payload.newClient.address,
+          projectLocation: action.payload.newClient.projectLocation
+        };
+        updatedClients = [...state.clients, newClient];
+        
+        // Update the budget to reference the new client ID
+        newBudget.clientId = newClient.id;
+        delete newBudget.newClient; // Remove the newClient data since it's now saved
+      }
+      
       return {
         ...state,
-        budgets: [...state.budgets, newBudget]
+        budgets: [...state.budgets, newBudget],
+        clients: updatedClients
       };
     
     case ActionTypes.UPDATE_BUDGET:
@@ -104,6 +126,26 @@ function budgetReducer(state, action) {
       return {
         ...state,
         budgets: state.budgets.filter(budget => budget.id !== action.payload)
+      };
+    
+    case ActionTypes.CREATE_REVISION:
+      const originalBudget = state.budgets.find(b => b.id === action.payload.originalBudgetId);
+      if (!originalBudget) return state;
+      
+      const revision = {
+        ...action.payload.revision,
+        id: Date.now().toString(),
+        parentBudgetId: originalBudget.parentBudgetId || originalBudget.id,
+        revisionNumber: (originalBudget.revisionNumber || 1) + 1,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        status: 'draft',
+        isRevision: true
+      };
+      
+      return {
+        ...state,
+        budgets: [...state.budgets, revision]
       };
     
     case ActionTypes.SET_CURRENT_BUDGET:
@@ -247,6 +289,12 @@ export function BudgetProvider({ children }) {
     updateBudget: (budget) => dispatch({ type: ActionTypes.UPDATE_BUDGET, payload: budget }),
     deleteBudget: (budgetId) => dispatch({ type: ActionTypes.DELETE_BUDGET, payload: budgetId }),
     
+    createRevision: (originalBudgetId, revisionData) => 
+      dispatch({ 
+        type: ActionTypes.CREATE_REVISION, 
+        payload: { originalBudgetId, revision: revisionData } 
+      }),
+    
     setCurrentBudget: (budget) => dispatch({ type: ActionTypes.SET_CURRENT_BUDGET, payload: budget }),
     setCurrentQuotation: (quotation) => dispatch({ type: ActionTypes.SET_CURRENT_QUOTATION, payload: quotation }),
     
@@ -254,8 +302,23 @@ export function BudgetProvider({ children }) {
     getBudgetById,
     getClientById,
     calculateBudgetTotals,
-    generateQuotation
-  }), [dispatch, getBudgetById, getClientById, calculateBudgetTotals, generateQuotation]);
+    generateQuotation,
+    
+    // Revision tracking utilities
+    getRevisionHistory: (budget) => {
+      const parentId = budget.parentBudgetId || budget.id;
+      return state.budgets.filter(b => 
+        b.id === parentId || b.parentBudgetId === parentId
+      ).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    },
+    
+    getLatestRevision: (budget) => {
+      const revisions = state.budgets.filter(b => 
+        b.id === budget.id || b.parentBudgetId === (budget.parentBudgetId || budget.id)
+      );
+      return revisions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+    }
+  }), [dispatch, getBudgetById, getClientById, calculateBudgetTotals, generateQuotation, state.budgets]);
 
   return (
     <BudgetContext.Provider value={{ state, actions }}>
