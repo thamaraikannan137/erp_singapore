@@ -1,0 +1,307 @@
+/* Quotation Document Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #fff;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto 20px;
+    padding: 20mm;
+    background: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    page-break-after: always;
+    position: relative;
+}
+
+.page:last-child {
+    page-break-after: avoid;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    text-decoration: underline;
+}
+
+.company-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    font-size: 10px;
+}
+
+.company-info .left {
+    text-align: left;
+}
+
+.company-info .right {
+    text-align: right;
+}
+
+.subject {
+    margin-bottom: 20px;
+}
+
+.subject strong {
+    font-weight: bold;
+}
+
+.content {
+    margin-bottom: 20px;
+    text-align: justify;
+}
+
+.quotation-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 10px;
+}
+
+.quotation-table th,
+.quotation-table td {
+    border: 1px solid #000;
+    padding: 8px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.quotation-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    text-align: center;
+}
+
+.quotation-table .description {
+    width: 50%;
+}
+
+.quotation-table .qty {
+    width: 10%;
+    text-align: center;
+}
+
+.quotation-table .uom {
+    width: 10%;
+    text-align: center;
+}
+
+.quotation-table .rate {
+    width: 15%;
+    text-align: right;
+}
+
+.quotation-table .amount {
+    width: 15%;
+    text-align: right;
+}
+
+.item-number {
+    font-weight: bold;
+    background-color: #f8f8f8;
+}
+
+.sub-item {
+    padding-left: 20px;
+}
+
+.bullet-point {
+    margin-left: 20px;
+}
+
+.total-row {
+    font-weight: bold;
+    background-color: #f0f0f0;
+}
+
+.page-number {
+    position: absolute;
+    bottom: 10mm;
+    right: 20mm;
+    font-size: 10px;
+}
+
+.note {
+    margin: 20px 0;
+    font-weight: bold;
+}
+
+.terms-section {
+    margin-top: 30px;
+}
+
+.terms-section h2 {
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 20px;
+    text-decoration: underline;
+}
+
+.terms-list {
+    list-style-type: decimal;
+    padding-left: 20px;
+}
+
+.terms-list li {
+    margin-bottom: 10px;
+    text-align: justify;
+}
+
+.signature-section {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.signature-box {
+    width: 45%;
+    text-align: center;
+}
+
+.signature-line {
+    border-bottom: 1px solid #000;
+    height: 40px;
+    margin: 20px 0 10px;
+}
+
+.company-details {
+    margin-top: 30px;
+    font-size: 10px;
+}
+
+.print-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: background-color 0.3s ease;
+}
+
+.print-btn:hover {
+    background: #0056b3;
+}
+
+/* Interactive Elements */
+.quotation-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.quotation-table tbody tr.item-number:hover,
+.quotation-table tbody tr.total-row:hover {
+    background-color: inherit;
+}
+
+.email-clickable {
+    cursor: pointer;
+    color: #007bff;
+    text-decoration: underline;
+}
+
+.email-clickable:hover {
+    color: #0056b3;
+}
+
+.notification {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1001;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Print Styles */
+@media print {
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .page {
+        margin: 0;
+        box-shadow: none;
+        page-break-after: always;
+    }
+    
+    .print-btn {
+        display: none;
+    }
+    
+    .page-number {
+        display: block;
+    }
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .page {
+        width: 100%;
+        padding: 15mm;
+        margin-bottom: 10px;
+    }
+    
+    .company-info {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .company-info .right {
+        text-align: left;
+    }
+    
+    .signature-section {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .signature-box {
+        width: 100%;
+    }
+    
+    .quotation-table {
+        font-size: 9px;
+    }
+    
+    .quotation-table th,
+    .quotation-table td {
+        padding: 5px;
+    }
+} 
