@@ -81,7 +81,6 @@ function budgetReducer(state, action) {
     case ActionTypes.ADD_BUDGET:
       const newBudget = {
         ...action.payload,
-        id: Date.now().toString(),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         status: 'draft'
@@ -285,7 +284,12 @@ export function BudgetProvider({ children }) {
     updateClient: (client) => dispatch({ type: ActionTypes.UPDATE_CLIENT, payload: client }),
     deleteClient: (clientId) => dispatch({ type: ActionTypes.DELETE_CLIENT, payload: clientId }),
     
-    addBudget: (budget) => dispatch({ type: ActionTypes.ADD_BUDGET, payload: budget }),
+    addBudget: (budget) => {
+      const budgetId = Date.now().toString();
+      const budgetWithId = { ...budget, id: budgetId };
+      dispatch({ type: ActionTypes.ADD_BUDGET, payload: budgetWithId });
+      return budgetId; // Return the generated ID
+    },
     updateBudget: (budget) => dispatch({ type: ActionTypes.UPDATE_BUDGET, payload: budget }),
     deleteBudget: (budgetId) => dispatch({ type: ActionTypes.DELETE_BUDGET, payload: budgetId }),
     

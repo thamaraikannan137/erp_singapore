@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronRightIcon, ChevronLeftIcon, UserIcon, BuildingOfficeIcon, DocumentTextIcon, WrenchScrewdriverIcon, TruckIcon, ClockIcon, PlusIcon, TrashIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import { useBudget } from '../context/BudgetContext';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const steps = [
   { title: 'Client Information' },
@@ -61,6 +61,7 @@ const BudgetCreation = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const { state, actions } = useBudget();
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Step 1 state
   const [selectedClientId, setSelectedClientId] = useState('');
@@ -1298,15 +1299,43 @@ const BudgetCreation = () => {
             <DocumentTextIcon className="w-5 h-5 mr-2" />
             Generate PDF
           </button>
+
           <button
             onClick={() => {
-              // Here you would send the budget via email
-              alert('Email feature would be implemented here.');
+              const searchParams = new URLSearchParams(location.search);
+              const editBudgetId = searchParams.get('edit');
+              const budgetData = {
+                clientId: selectedClientId !== 'new' ? selectedClientId : undefined,
+                newClient: selectedClientId === 'new' ? newClient : undefined,
+                project,
+                budgetType: selectedBudgetType,
+                sections,
+                totals: {
+                  subtotal: calculateProjectTotal(),
+                  gst: calculateProjectTotal() * 0.07,
+                  total: calculateProjectTotal() * 1.07
+                },
+                status: 'draft',
+                updatedAt: new Date().toISOString()
+              };
+              let budgetId;
+              if (editBudgetId) {
+                // Update existing budget
+                budgetData.id = editBudgetId;
+                budgetData.createdAt = state.budgets.find(b => b.id === editBudgetId)?.createdAt || new Date().toISOString();
+                actions.updateBudget(budgetData);
+                budgetId = editBudgetId;
+              } else {
+                // Create new budget
+                budgetData.createdAt = new Date().toISOString();
+                budgetId = actions.addBudget(budgetData);
+              }
+              navigate(`/quotation/generate/${budgetId}`);
             }}
-            className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center"
+            className="flex-1 bg-pink-600 hover:bg-pink-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center"
           >
             <DocumentTextIcon className="w-5 h-5 mr-2" />
-            Send to Client
+            Generate Quotation
           </button>
         </div>
       </div>
