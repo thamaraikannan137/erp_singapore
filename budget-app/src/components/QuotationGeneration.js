@@ -488,7 +488,7 @@ Email: admin@centurygr.com`;
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-6xl mx-auto">
       {/* Action Bar */}
       <div className="no-print mb-6 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
         <div className="flex items-center justify-between">
@@ -586,7 +586,7 @@ Email: admin@centurygr.com`;
           previewMode ? "shadow-2xl" : ""
         } transition-all duration-300`}
       >
-        <div className="bg-white quotation-document" ref={printRef}>
+        <div className="quotation-document" ref={printRef}>
           <style jsx>{`
             /* Quotation Document Specific Styles */
             .quotation-document {
@@ -596,19 +596,19 @@ Email: admin@centurygr.com`;
               font-size: 11pt;
               color: #000;
               line-height: 1.3;
+              padding: 20px;
+              max-width: 100%;
+              margin: 0 auto;
             }
 
             .quotation-document * {
               box-sizing: border-box;
             }
 
-            .quotation-document .page-container {
-              padding: 20px 0;
-            }
-
             .quotation-document .page {
               background: #fff;
-              width: 210mm;
+              width: 100%;
+              max-width: 210mm;
               min-height: 297mm;
               margin: 0 auto 20px auto;
               box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
@@ -856,24 +856,66 @@ Email: admin@centurygr.com`;
 
             /* Print Styles */
             @media print {
+              * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+              }
+              
+              body {
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+              }
+              
               .quotation-document {
-                background-color: white;
+                background: white !important;
+                margin: 0 !important;
+                padding: 0 !important;
               }
-
+              
               .quotation-document .page {
-                box-shadow: none;
-                margin: 0;
-                page-break-after: always;
+                background: white !important;
+                margin: 0 !important;
+                padding: 18mm !important;
+                width: 210mm !important;
+                min-height: 297mm !important;
+                page-break-after: always !important;
+                page-break-inside: avoid !important;
+                break-after: page !important;
+                break-inside: avoid !important;
+                display: block !important;
+                box-shadow: none !important;
               }
-
+              
               .quotation-document .page:last-child {
-                page-break-after: auto;
+                page-break-after: auto !important;
+                break-after: auto !important;
               }
-
-              .quotation-document .no-print {
-                display: none;
-              }
+              
+                          .quotation-document .no-print {
+              display: none !important;
             }
+          }
+          
+          /* Responsive styles for screen display */
+          @media screen and (max-width: 768px) {
+            .quotation-document {
+              padding: 10px;
+            }
+            
+            .quotation-document .page {
+              padding: 10mm;
+              margin: 0 auto 10px auto;
+            }
+            
+            .quotation-document .quotation-title {
+              font-size: 14pt;
+            }
+            
+            .quotation-document .costing-title {
+              font-size: 12pt;
+            }
+          }
           `}</style>
 
           {/* Image Modal */}
